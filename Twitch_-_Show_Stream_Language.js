@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitch - Show Stream Language
 // @namespace    twitch-lang-suffix
-// @version      1.3.1
+// @version      1.4.2
 // @description  Shows stream language as [EN]/[FR]/[...]. Configurable, two UIs: top-right badge or right-aligned suffix
 // @author       Vikindor
 // @homepageURL  https://github.com/Vikindor/twitch-show-stream-language
@@ -27,13 +27,17 @@
 
   // Language tags and codes (used for content/freeform tags)
   const tagNameToCode = new Map(Object.entries({
-    'english':'EN','русский':'RU','deutsch':'DE','español':'ES','espanol':'ES',
-    'português':'PT','portugues':'PT','português (brasil)':'PT-BR','portugues (brasil)':'PT-BR',
-    'français':'FR','francais':'FR','italiano':'IT','polski':'PL',
-    'українська':'UK','ukrainian':'UK','日本語':'JA','한국어':'KO',
-    '中文':'ZH','中文（简体）':'ZH-CN','中文（繁體）':'ZH-TW','中文(简体)':'ZH-CN','中文(繁體)':'ZH-TW',
-    'türkçe':'TR','turkish':'TR','svenska':'SV','dutch':'NL'
+    'arabic': 'AR','qatar': 'AR','uae': 'AR','العربية': 'AR','bulgarian': 'BG','български': 'BG',
+    'czech': 'CS','cz': 'CS','czsk': 'CS','čeština': 'CS','danish': 'DA','dansk': 'DA','deutsch': 'DE',
+    'greek': 'EL','ελληνικά': 'EL','australia': 'EN','english': 'EN','español': 'ES','espanol': 'ES',
+    'suomi': 'FI','francais': 'FR','français': 'FR','magyar': 'HU','italiano': 'IT','日本語': 'JA',
+    '한국어': 'KO','lietuva': 'LT','lithuania': 'LT','dutch': 'NL','nederlands': 'NL','norsk': 'NO',
+    'polski': 'PL','portugues': 'PT','português': 'PT','portugues': 'PT','português': 'PT',
+    'romania': 'RO','romanian': 'RO','română': 'RO','русский': 'RU','slovenčina': 'SK','svenska': 'SV',
+    'tagalog': 'TL','turkish': 'TR','türkçe': 'TR','ukrainian': 'UK','українська': 'UK',
+    '中文': 'ZH','中文(简体)': 'ZH','中文(繁體)': 'ZH'
   }));
+
   function tagToCode(tagObj) {
     if (!tagObj) return null;
     if (typeof tagObj === 'string') return tagNameToCode.get(tagObj.trim().toLowerCase()) || null;
@@ -153,6 +157,44 @@
     return m ? m[1].toLowerCase() : null;
   }
 
+  // --- Unicode-script heuristic fallback (last resort, no Latin guesses) ---
+  function inferLanguageFromText(text) {
+    if (!text) return null;
+    const t = text.replace(/https?:\/\/\S+/g, '');
+    if (/[ㄱ-ㅎ가-힣]/.test(t)) return 'KO';       // Hangul
+    if (/[\u3040-\u309F]/.test(t) || /[\u30A0-\u30FF]/.test(t)) return 'JA'; // Hiragana/Katakana
+    if (/[\u4E00-\u9FFF]/.test(t)) return 'ZH';  // CJK Han
+    if (/[\u0600-\u06FF]/.test(t)) return 'AR';  // Arabic
+    if (/[\u0590-\u05FF]/.test(t)) return 'HE';  // Hebrew
+    if (/[\u0E00-\u0E7F]/.test(t)) return 'TH';  // Thai
+    if (/[\u0900-\u097F]/.test(t)) return 'HI';  // Devanagari
+    // Cyrillic and Latin are intentionally not guessed to avoid false positives
+    return null;
+  }
+
+  // Reads visible title text from the card to apply the heuristic as the very last fallback
+  function inferLangFromCard(card) {
+    try {
+      // Prefer real full title from the 'title' attribute
+      const titled =
+        card.querySelector('h4[title], h3[title], p[title]');
+      const titleFromAttr = titled ? titled.getAttribute('title') : '';
+
+      if (titleFromAttr) return inferLanguageFromText(titleFromAttr);
+
+      // Fallback to previous selectors
+      const titleEl =
+        card.querySelector('a[data-a-target="preview-card-title-link"]') ||
+        card.querySelector('a[data-test-selector="preview-card-title-link"]') ||
+        card.querySelector('[data-test-selector="TitleAndChannel__title"]');
+
+      const title = titleEl ? titleEl.textContent : '';
+      return inferLanguageFromText(title);
+    } catch (_) {
+      return null;
+    }
+  }
+
   // Suffix, right-aligned against username
   function ensureRightSuffix(node, login) {
     const card = node.closest('article,[data-target="directory-first-item"]') || node;
@@ -173,9 +215,17 @@
       badge.style.order = '999';
       row.appendChild(badge);
     }
+    // fixed color and click-through, per current design
     badge.style.color = 'rgb(162,126,217)';
     badge.style.pointerEvents = 'none';
-    badge.textContent = `[${langByLogin.get(login) || '??'}]`;
+
+    let code = langByLogin.get(login);
+    if (!code) {
+      // last-resort Unicode-script heuristic, no Latin guesses
+      const h = inferLangFromCard(card);
+      if (h) code = h;
+    }
+    badge.textContent = `[${code || '??'}]`;
 
     card.querySelectorAll('.__langSuffixRight').forEach((el) => {
       if (el !== badge && el.parentElement !== row) el.remove();
@@ -214,7 +264,13 @@
       el.textContent = '[??]';
       thumb.appendChild(el);
     }
-    el.textContent = `[${langByLogin.get(login) || '??'}]`;
+    let code = langByLogin.get(login);
+    if (!code) {
+      // last-resort Unicode-script heuristic for badge mode too
+      const h = inferLangFromCard(article);
+      if (h) code = h;
+    }
+    el.textContent = `[${code || '??'}]`;
   }
 
   function annotate(root = document) {
