@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Twitch - Show Stream Language
-// @namespace    twitch-lang-suffix
-// @version      1.5.3
-// @description  Shows stream language as [EN]/[FR]/etc. Configurable, two UIs: top-right badge or right-aligned suffix
+// @namespace    twitch-language-suffix
+// @version      1.5.4
+// @description  Displays the stream language as [EN]/[JA]/etc. Configurable, with two UI modes: a badge on the stream preview or a suffix next to the streamer’s username
 // @author       Vikindor (https://vikindor.github.io/)
 // @homepageURL  https://github.com/Vikindor/twitch-show-stream-language
 // @supportURL   https://github.com/Vikindor/twitch-show-stream-language/issues
@@ -17,7 +17,10 @@
   'use strict';
 
   // ----------- CONFIG -----------
-  const VISUAL_MODE = 'suffix-right'; // 'suffix-right' or 'badge'
+  // VISUAL_MODE options:
+  // - 'suffix' : adds label next to the streamer's username
+  // - 'badge'        : adds small pill in the top-right corner of the preview card
+  const VISUAL_MODE = 'suffix';
 
   // ----------- DATA -----------
   const langByLogin = new Map();
@@ -406,7 +409,7 @@
   function annotate(root = document) {
     ensureChannelHeaderLang(root);
 
-    if (VISUAL_MODE === 'suffix-right') {
+    if (VISUAL_MODE === 'suffix') {
       let nodes = root.querySelectorAll(
         'p[data-a-target="preview-card-channel-link"], p[data-test-selector="TitleAndChannel__channelLink"]'
       );
