@@ -39,7 +39,7 @@ Two visual modes are available: a **top‑right badge** on the card or a **right
    - [OpenUserJS](https://openuserjs.org/scripts/Vikindor/Twitch_-_Show_Stream_Language)
    - Or [install directly from this repository](./Twitch_-_Show_Stream_Language.js).
 
-## ⚙️ Configuration
+## 🔧 Configuration
 
 Open the script in your userscript manager and change the value of:
 
@@ -51,7 +51,7 @@ suffix - adds label next to the streamer's username.
 
 badge - adds small pill in the top-right corner of the preview card.
 
-## 🔧 How it works
+## ⚙ How it works
 
 The script passively listens to Twitch’s SPA updates and XHR GQL responses, extracts language info from fields like `broadcasterLanguage`, `language`, and content tags, and maps localized tag names to ISO‑like codes when needed. It then annotates relevant DOM nodes as they appear.
 
