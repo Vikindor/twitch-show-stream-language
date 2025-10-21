@@ -2,7 +2,7 @@
 Twitch - Show Stream Language
 </h1>
 
-Userscript for browsers that displays a stream’s language code like **[EN] / [JA] / [ES]** right in the Twitch UI.
+Userscript for browsers that displays stream’s language code like **[EN] / [JA] / [ES]** right in the Twitch UI.
 Works on channel preview cards in directories and on the channel page header itself.
 Two visual modes are available: a **top‑right badge** on the card or a **right‑aligned suffix** next to the streamer's username.
 
@@ -20,16 +20,15 @@ Two visual modes are available: a **top‑right badge** on the card or a **right
 
 ### Suffixes next to streamers’ usernames
 
-<img src="media/channels_suffix.jpg" width="400" alt="Channels page — Suffix screenshot" title="Channels page — Suffix"/>
+<img src="media/channels_suffix.jpg" width="100%" alt="Channels page — Suffix screenshot" title="Channels page — Suffix"/>
 
 ### Badges on channel preview cards
 
-<img src="media/channels_badge.jpg" width="400" alt="Channels page — Badge screenshot" title="Channels page — Badge"/>
+<img src="media/channels_badge.jpg" width="100%" alt="Channels page — Badge screenshot" title="Channels page — Badge"/>
 
 ### Suffix or badge on the stream page
 
-<img src="media/stream_suffix_and_badge.jpg" width="400" alt="Suffix and badge variants screenshot" title="Suffix and badge variants"/>
-
+<img src="media/stream_suffix_and_badge.jpg" alt="Suffix and badge variants screenshot" title="Suffix and badge variants"/>
 
 ## 🚀 Installation
 
@@ -55,6 +54,6 @@ badge - adds small pill in the top-right corner of the preview card.
 
 The script passively listens to Twitch’s SPA updates and XHR GQL responses, extracts language info from fields like `broadcasterLanguage`, `language`, and content tags, and maps localized tag names to ISO‑like codes when needed. It then annotates relevant DOM nodes as they appear.
 
-## ❗ Notes
+## ❗ Note
 
 In rare cases, you may see a **[??]** suffix — this happens when the stream has no language set in GQL and no recognizable custom tags to infer it from. This is a known issue and I’m exploring possible ways to improve detection; it may be resolved in future updates.
