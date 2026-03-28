@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitch - Show Stream Language
 // @namespace    twitch-language-suffix
-// @version      1.5.6
+// @version      1.5.7
 // @description  Displays the stream language as [EN]/[JA]/etc. Configurable, with two UI modes: a badge on the stream preview or a suffix next to the streamer’s username.
 // @author       Vikindor (https://vikindor.github.io/)
 // @homepageURL  https://github.com/Vikindor/twitch-show-stream-language/
@@ -162,11 +162,17 @@
     }
   }
 
+  function getFetchUrl(input) {
+    if (typeof input === 'string') return input;
+    if (input && typeof input.url === 'string') return input.url;
+    return '';
+  }
+
   const origFetch = window.fetch;
   window.fetch = function (...args) {
     const p = origFetch.apply(this, args);
     try {
-      const url = String(args[0] || '');
+      const url = getFetchUrl(args[0]);
       if (url.includes('/gql')) {
         p.then((res) => { res.clone().json().then(collectLanguages).catch(()=>{}); }).catch(()=>{});
       }
