@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitch - Show Stream Language
 // @namespace    twitch-language-suffix
-// @version      1.5.7
+// @version      1.5.8
 // @description  Displays the stream language as [EN]/[JA]/etc. Configurable, with two UI modes: a badge on the stream preview or a suffix next to the streamer’s username.
 // @author       Vikindor (https://vikindor.github.io/)
 // @homepageURL  https://github.com/Vikindor/twitch-show-stream-language/
@@ -408,14 +408,9 @@
     ensureChannelHeaderLang(root);
 
     if (VISUAL_MODE === 'suffix') {
-      let nodes = root.querySelectorAll(
-        'p[data-a-target="preview-card-channel-link"], p[data-test-selector="TitleAndChannel__channelLink"]'
+      const nodes = root.querySelectorAll(
+        'p[data-a-target="preview-card-channel-link"], p[data-test-selector="TitleAndChannel__channelLink"], a[data-a-target="preview-card-channel-link"], a[data-test-selector="preview-card-channel-link"], a[data-test-selector="TitleAndChannel__channelLink"]'
       );
-      if (nodes.length === 0) {
-        nodes = root.querySelectorAll(
-          'a[data-a-target="preview-card-channel-link"], a[data-test-selector="preview-card-channel-link"], a[data-test-selector="TitleAndChannel__channelLink"]'
-        );
-      }
       nodes.forEach((n) => {
         const login = getLoginFromLink(n);
         if (!login) return;
