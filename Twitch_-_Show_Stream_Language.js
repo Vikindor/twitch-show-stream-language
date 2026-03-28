@@ -17,9 +17,8 @@
   'use strict';
 
   // ---------------- CONFIG ----------------
-  // VISUAL_MODE options:
-  // - 'suffix' : adds label next to the streamer's username
-  // - 'badge'  : adds small pill in the top-right corner of the preview card
+  // 'suffix' -> adds label next to the streamer's username
+  // 'badge' -> adds small pill in the top-right corner of the preview card
   const VISUAL_MODE = 'suffix';
   // ----------------------------------------
 
