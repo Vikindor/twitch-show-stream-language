@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitch - Show Stream Language
 // @namespace    twitch-language-suffix
-// @version      1.5.8
+// @version      1.5.9
 // @description  Displays the stream language as [EN]/[JA]/etc. Configurable, with two UI modes: a badge on the stream preview or a suffix next to the streamer’s username.
 // @author       Vikindor (https://vikindor.github.io/)
 // @homepageURL  https://github.com/Vikindor/twitch-show-stream-language/
@@ -332,8 +332,11 @@
 
   function ensureRightSuffix(node, login) {
     const card = node.closest('article,[data-target="directory-first-item"]') || node;
+    const primaryNode =
+      card.querySelector('p[data-a-target="preview-card-channel-link"], p[data-test-selector="TitleAndChannel__channelLink"]') ||
+      node;
 
-    let row = node.parentElement || node;
+    let row = primaryNode.parentElement || primaryNode;
     if (row && row.nextElementSibling && row.parentElement) {
       row = row.parentElement;
     }
