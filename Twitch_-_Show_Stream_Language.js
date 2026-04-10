@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Twitch - Show Stream Language
 // @namespace    twitch-language-suffix
-// @version      1.5.9
+// @version      1.5.10
 // @description  Displays the stream language as [EN]/[JA]/etc. Configurable, with two UI modes: a badge on the stream preview or a suffix next to the streamer’s username.
 // @author       Vikindor (https://vikindor.github.io/)
 // @homepageURL  https://github.com/Vikindor/twitch-show-stream-language/
 // @supportURL   https://github.com/Vikindor/twitch-show-stream-language/issues
-// @license      MIT
+// @license      GPL-3.0
 // @match        https://www.twitch.tv/*
 // @grant        none
 // @inject-into  page
