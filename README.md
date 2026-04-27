@@ -6,6 +6,13 @@ Userscript for browsers that displays stream’s language code like **[EN] / [JA
 Works on channel preview cards in directories and on the channel page header itself.
 Two visual modes are available: a **top‑right badge** on the card or a **right‑aligned suffix** next to the streamer's username.
 
+---
+
+💥 **New:** This userscript is also available as part of **Twitch Enhancer**, a browser extension for **Chrome** and **Firefox** that combines it with other Twitch quality-of-life improvements.  
+Learn more: [Twitch Enhancer](https://github.com/Vikindor/twitch-enhancer-extension)
+
+---
+
 ## ✨ Features
 
 - Detects and shows the stream language (ISO‑like two‑letter codes and common locale variants).
